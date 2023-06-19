@@ -1,0 +1,205 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}首页{% endblock %}
+
+{% block content %}
+    <style>
+        a,a:hover,a:focus{
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .panel-group {
+            background-color: #404040;
+            width: 250px;
+            height: 800px;
+
+        }
+        .panel-group .panel {
+            background-color: #404040;
+            border: none;
+        }
+        .panel-heading{
+            border-top-left-radius: 0px;
+            border-top-right-radius: 0px;
+        }
+        .panel-default>.panel-heading {
+            border: none;
+            color: #ffffff;
+            background-color: #505050;
+        }
+        .panel-default>.panel-heading>span{
+            font-size: 10px;
+        }
+        .panel-default>.panel-heading:active,.panel-default>.panel-heading:hover{
+            background-color: #4a8bc2;
+        }
+        .panel-default>.panel-heading>a:hover{
+            text-decoration: none;
+            background-color: #4a8bc2;
+        }
+        .panel-group .panel-heading+.panel-collapse>.panel-body {
+            border: none;
+        }
+        .panel-body {
+            padding: 0px;
+        }
+        .nav>li{
+            padding: 1px 0px 0px 0px;
+        }
+        .nav>li>a{
+            text-decoration: none;
+            padding: 10px 10px 10px 35px;
+        }
+        .nav>li>a:hover,.nav>li>a:focus{
+            background-color: #505050;
+        }
+    </style>
+     {{ dropzone.load_css() }}
+    {{ dropzone.style('border: 2px dashed #0087F7; margin: 10%') }}
+    <div class="container-fluid">
+    <div class="row-fluid">
+        <div class="col-md-12">
+            <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <a class="navbar-brand" href="#"><i class="glyphicon glyphicon-send" aria-hidden="true"></i>网络流量异常检测系统</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+          {% if g.user %}
+              <li class="dropdown"><a class="navbar-brand" href="#"><span >{{ g.user['username'] }}</span></a>
+              <li class="dropdown">
+                  <a href="{{ url_for('auth.logout') }}" class="dropdown-toggle" >注销</a>
+              </li>
+          {% else %}
+              <li class="dropdown">
+                <a href="{{ url_for('auth.register') }}" class="dropdown-toggle" >注册</a>
+              </li>
+              <li class="dropdown">
+                <a href="{{ url_for('auth.login') }}" class="dropdown-toggle" >登录</a>
+              </li>
+          {% endif %}
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+        </div>
+    </div>
+    </div>
+    <div class="container-fluid">
+	    <div class="row-fluid">
+		    <div class="col-md-2">
+                <div class="panel-group" id="panelContainer">
+    <div class="panel panel-default">
+        <div id="header1" class="panel-heading" data-toggle="collapse" data-target="#sub1" data-parent="#panelContainer">
+            <i class="glyphicon glyphicon-list-alt"></i>
+            <a href="#">网络流量特征预处理</a>
+            <span class="glyphicon glyphicon-triangle-right pull-right"></span>
+        </div>
+        <div id="sub1" class="collapse panel-collapse">
+            <div class="panel-body">
+                <ul class="nav">
+                    <li>
+                        <a href="{{ url_for('index.shouye') }}"><span></span>流量特征处理</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div id="header2" class="panel-heading" data-toggle="collapse" data-target="#sub2" data-parent="#panelContainer">
+            <i class="glyphicon glyphicon-leaf"></i>
+            <a href="#">网络流量异常检测</a>
+            <span class="glyphicon glyphicon-triangle-right pull-right"></span>
+        </div>
+        <div id="sub2" class="collapse panel-collapse">
+            <div class="panel-body">
+                <ul class="nav">
+                    <li>
+                        <a href="{{ url_for('index.white') }}">流量白名单</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('index.black') }}">流量黑名单</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('index.error') }}">异常检测</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+                    <div class="panel panel-default">
+        <div id="header3" class="panel-heading" data-toggle="collapse" data-target="#sub3" data-parent="#panelContainer">
+            <i class="glyphicon glyphicon-list-alt"></i>
+            <a href="#">流量数据可视化</a>
+            <span class="glyphicon glyphicon-triangle-right pull-right"></span>
+        </div>
+        <div id="sub3" class="collapse panel-collapse">
+            <div class="panel-body">
+                <ul class="nav">
+                    <li>
+                        <a href="{{ url_for('index.pic') }}"><span></span>数据可视化</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+		    </div>
+		    <div class="col-md-10">
+                <h3><i class="glyphicon glyphicon-paperclip"></i>网络流量数据分析</h3>
+                <form action="draw_app" method="post" style="display: inline">
+                    <button class="btn btn-success" type="submit" name="draw_app" style="display: inline;margin-left:100px; margin-top:20px; border-style: none;" onclick="show()">应用层协议数据分析</button>
+            </form>
+            <form action="draw_ad" method="post" style="display: inline">
+                    <button class="btn btn-success" type="submit" name="draw_app" style="display: inline;margin-left:110px; margin-top:20px; border-style: none;" onclick="show()">异常检测结果分析</button>
+            </form>
+            <form action="draw_bw" method="post" style="display: inline">
+                    <button class="btn btn-success" type="submit" name="draw_app" style="display: inline;margin-left:120px; margin-top:20px; border-style: none;" onclick="show()">黑白名单检测结果</button>
+            </form>
+                        {% if data %}
+                            <img src="../../static/{{ data }}" style="display: inline;margin-left:140px;">
+                        {% endif %}
+            {% if data1 %}
+                            <img src="../../static/{{ data1 }} " style="display: inline;margin-left:140px;">
+                        {% endif %}
+		    </div>
+	    </div>
+    </div>
+
+    <script>
+        function show(){
+            var overplay =document.getElementById("overplay")
+            overplay.style.display="inline";
+        }
+        $(function() {
+            $(".panel-heading").on("click", function(e) {
+                var idLength = e.currentTarget.id.length;
+                var index = e.currentTarget.id.substr(idLength - 1, idLength);
+                $("#sub" + index).on('hidden.bs.collapse', function() {
+                    $(e.currentTarget).find("span").removeClass("glyphicon glyphicon-triangle-bottom");
+                    $(e.currentTarget).find("span").addClass("glyphicon glyphicon-triangle-right");
+                })
+                $("#sub" + index).on('shown.bs.collapse', function() {
+                    $(e.currentTarget).find("span").removeClass("glyphicon glyphicon-triangle-right");
+                    $(e.currentTarget).find("span").addClass("glyphicon glyphicon-triangle-bottom");
+                })
+            })
+            $(".panel-body > .nav > li > a").on("click", function(e) {
+                alert(e.currentTarget.textContent);
+            });
+        });
+    </script>
+
+{% endblock %}

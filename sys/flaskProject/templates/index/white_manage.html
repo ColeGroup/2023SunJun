@@ -1,0 +1,338 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}黑名单{% endblock %}
+
+{% block content %}
+    <style>
+    /* 遮罩层 */
+  .overplay {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    /* IE9以下不支持rgba模式 */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* 兼容IE8及以下 */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7f000000,endColorstr=#7f000000);
+    display: none;
+  }
+  /* 弹出框主体 */
+  .popup {
+    background-color: #ffffff;
+    max-width: 400px;
+    min-width: 200px;
+    height: 300px;
+    border-radius: 5px;
+    margin: 100px auto;
+    text-align: center;
+  }
+  /* 弹出框的标题 */
+  .popup_title {
+    height: 60px;
+    line-height: 60px;
+    border-bottom: solid 1px #cccccc;
+  }
+  /* 弹出框的内容 */
+  .popup_content {
+    height: 50px;
+    line-height: 50px;
+    padding: 15px 20px;
+  }
+  /* 弹出框的按钮栏 */
+  .popup_btn {
+    padding-bottom: 10px;
+  }
+  /* 弹出框的按钮 */
+  .popup_btn button {
+    color: #778899;
+    width: 40%;
+    height: 40px;
+    cursor: pointer;
+    border: solid 1px #cccccc;
+    border-radius: 5px;
+    margin: 5px 10px;
+    color: #ffffff;
+    background-color: #337ab7;
+  }
+  #overplay2 {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    /* IE9以下不支持rgba模式 */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* 兼容IE8及以下 */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7f000000,endColorstr=#7f000000);
+    display: none;
+  }
+  /* 弹出框主体 */
+  .popup {
+    background-color: #ffffff;
+    max-width: 400px;
+    min-width: 200px;
+    height: 240px;
+    border-radius: 5px;
+    margin: 100px auto;
+    text-align: center;
+  }
+  /* 弹出框的标题 */
+  .popup_title {
+    height: 60px;
+    line-height: 60px;
+    border-bottom: solid 1px #cccccc;
+  }
+  /* 弹出框的内容 */
+  .popup_content {
+    height: 50px;
+    line-height: 50px;
+    padding: 15px 20px;
+  }
+  /* 弹出框的按钮栏 */
+  .popup_btn {
+    padding-bottom: 10px;
+  }
+  /* 弹出框的按钮 */
+  .popup_btn button {
+    color: #778899;
+    width: 40%;
+    height: 40px;
+    cursor: pointer;
+    border: solid 1px #cccccc;
+    border-radius: 5px;
+    margin: 5px 10px;
+    color: #ffffff;
+    background-color: #337ab7;
+  }
+
+        a,a:hover,a:focus{
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .panel-group {
+            background-color: #404040;
+            width: 250px;
+            height: 800px;
+
+        }
+        .panel-group .panel {
+            background-color: #404040;
+            border: none;
+        }
+        .panel-heading{
+            border-top-left-radius: 0px;
+            border-top-right-radius: 0px;
+        }
+        .panel-default>.panel-heading {
+            border: none;
+            color: #ffffff;
+            background-color: #505050;
+        }
+        .panel-default>.panel-heading>span{
+            font-size: 10px;
+        }
+        .panel-default>.panel-heading:active,.panel-default>.panel-heading:hover{
+            background-color: #4a8bc2;
+        }
+        .panel-default>.panel-heading>a:hover{
+            text-decoration: none;
+            background-color: #4a8bc2;
+        }
+        .panel-group .panel-heading+.panel-collapse>.panel-body {
+            border: none;
+        }
+        .panel-body {
+            padding: 0px;
+        }
+        .nav>li{
+            padding: 1px 0px 0px 0px;
+        }
+        .nav>li>a{
+            text-decoration: none;
+            padding: 10px 10px 10px 35px;
+        }
+        .nav>li>a:hover,.nav>li>a:focus{
+            background-color: #505050;
+        }
+
+    </style>
+     {{ dropzone.load_css() }}
+    {{ dropzone.style('border: 2px dashed #0087F7; margin: 10%') }}
+    <div class="container-fluid">
+    <div class="row-fluid">
+        <div class="col-md-12">
+            <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <a class="navbar-brand" href="#"><i class="glyphicon glyphicon-send" aria-hidden="true"></i>网络流量异常检测系统</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+          {% if g.user %}
+              <li class="dropdown"><a class="navbar-brand" href="#"><span >{{ g.user['username'] }}</span></a>
+              <li class="dropdown">
+                  <a href="{{ url_for('auth.logout') }}" class="dropdown-toggle" >注销</a>
+              </li>
+          {% else %}
+              <li class="dropdown">
+                <a href="{{ url_for('auth.register') }}" class="dropdown-toggle" >注册</a>
+              </li>
+              <li class="dropdown">
+                <a href="{{ url_for('auth.login') }}" class="dropdown-toggle" >登录</a>
+              </li>
+          {% endif %}
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+        </div>
+    </div>
+    </div>
+    <div class="container-fluid">
+	    <div class="row-fluid">
+		    <div class="col-md-2">
+                <div class="panel-group" id="panelContainer">
+    <div class="panel panel-default">
+        <div id="header1" class="panel-heading" data-toggle="collapse" data-target="#sub1" data-parent="#panelContainer">
+            <i class="glyphicon glyphicon-list-alt"></i>
+            <a href="#">用户管理</a>
+            <span class="glyphicon glyphicon-triangle-right pull-right"></span>
+        </div>
+        <div id="sub1" class="collapse panel-collapse">
+            <div class="panel-body">
+                <ul class="nav">
+                    <li>
+                        <a href="{{ url_for('index.manage') }}"><span></span>用户信息管理</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div id="header2" class="panel-heading" data-toggle="collapse" data-target="#sub2" data-parent="#panelContainer">
+            <i class="glyphicon glyphicon-leaf"></i>
+            <a href="#">黑白名单管理</a>
+            <span class="glyphicon glyphicon-triangle-right pull-right"></span>
+        </div>
+        <div id="sub2" class="collapse panel-collapse">
+            <div class="panel-body">
+                <ul class="nav">
+                    <li>
+                        <a href="{{ url_for('index.white_manage') }}">白名单管理</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('index.black_manage') }}">黑名单管理</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+		    </div>
+		    <div class="col-md-10">
+                    <h1>白名单管理</h1>
+                    <table class="table table-hover">
+                    <thead>
+                    <th>
+                        用户id
+                    </th>
+                    <th>
+                        白名单
+                    </th>
+                    <th>
+                        操作
+                    </th>
+                    <th>
+                        操作
+                    </th>
+                    </thead>
+
+                    <tbody>
+                    {% for white in whites %}
+                    <tr>
+                        <td>
+                            {{ white['author_id'] }}
+                        </td>
+                        <td>
+                            {{ white['w_text'] }}
+                        </td>
+                        <td>
+                            <button  id="show_{{ white['id'] }}"  name='show' onclick="show({{ white['id'] }})" class="btn btn-success">修改</button>
+                            <div  id="{{ white['id'] }}" class="overplay" name="overplay" style="display: none;">
+                                <div class="popup">
+                                    <button onclick="hidePopup({{ white['id'] }})" style=" margin-left:360px; margin-top:2px; border-style: none;"><i class="glyphicon glyphicon-remove" ></i></button>
+                                    <form action="modify_manage_white/{{ white['id'] }}" method="post" class="popup_content">
+                                    <p class="popup_title" >请输入新的白名单IP</p>
+                                        <input type="text" class="popup_content" id="ipname" name="ipname" placeholder="请输入IP地址">
+                                        <div class="popup_btn">
+                                            <button class="cancelBtn" type="submit" name="xiugai">确认</button>
+                                        </div>
+                                    </form>
+                                </div>
+                           </div>
+                        <script>
+                            function show(a){
+                                var overplay= document.getElementById(a)
+                                console.log(overplay)
+                                overplay.style.display="block"
+                            }
+
+                            function hidePopup(a){
+                                var overplay = document.getElementById(a)
+                                console.log(overplay)
+                                overplay.style.display="none"
+                            }
+                            </script>
+                        </td>
+
+                        <td>
+                            <form action="delete_manage_white/{{ white['id'] }}" method="post">
+                                <button class="btn btn-danger" type="submit" name="shanchu">删除</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+
+                    </table>
+
+		    </div>
+	    </div>
+    </div>
+
+    <script >
+
+        $(function() {
+            $(".panel-heading").on("click", function(e) {
+                var idLength = e.currentTarget.id.length;
+                var index = e.currentTarget.id.substr(idLength - 1, idLength);
+                $("#sub" + index).on('hidden.bs.collapse', function() {
+                    $(e.currentTarget).find("span").removeClass("glyphicon glyphicon-triangle-bottom");
+                    $(e.currentTarget).find("span").addClass("glyphicon glyphicon-triangle-right");
+                })
+                $("#sub" + index).on('shown.bs.collapse', function() {
+                    $(e.currentTarget).find("span").removeClass("glyphicon glyphicon-triangle-right");
+                    $(e.currentTarget).find("span").addClass("glyphicon glyphicon-triangle-bottom");
+                })
+            })
+            $(".panel-body > .nav > li > a").on("click", function(e) {
+                alert(e.currentTarget.textContent);
+            });
+        });
+    </script>
+
+{% endblock %}

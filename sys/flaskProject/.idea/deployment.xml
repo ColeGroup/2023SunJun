@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="124.221.174.224" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="124.221.174.224">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/ubuntu/sunjun" local="$PROJECT_DIR$" web="/anomaly_detection" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>
